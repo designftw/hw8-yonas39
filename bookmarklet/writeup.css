@@ -1,1 +1,11 @@
 /* css for all your writeups here */
+body {
+  padding: 2em;
+  margin: 2em;
+}
+h1,
+p {
+  text-align: center;
+  padding: 1em;
+  margin-bottom: 1em;
+}

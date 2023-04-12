@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmarklet Demo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/themes/prism.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Element Removal Bookmarklet</h1>
+    <p>Drag the link below to your bookmarks toolbar:</p>
+    <p>
+      <a
+        href="javascript:(function(){document.body.style.paddingTop='20px';var removedElements=[];var removalActive=!0;var currentHighlightedElement;function createButton(t,e){var n=document.createElement('button');return n.innerHTML=t,n.style.position='fixed',n.style.top='10px',n.style.zIndex='999999',n.style.color='Blue',n.style.backgroundColor='orange',n.style.border='1px solid black',n.style.padding='5px',n.style.marginRight='10px',n.onclick=e,document.body.appendChild(n),n}var undoButton=createButton('Undo',function(){if(removedElements.length){var t=removedElements.pop();t.parent.insertBefore(t.node,t.nextSibling)}}),endButton=createButton('End',function(){removalActive=!1,undoButton.remove(),endButton.remove(),resetButton.remove(),document.removeEventListener('mousemove',highlightElement)}),resetButton=createButton('Reset',function(){for(;removedElements.length;){var t=removedElements.pop();t.parent.insertBefore(t.node,t.nextSibling)}});endButton.style.left='calc(10px + '+undoButton.offsetWidth+'px)',resetButton.style.left='calc(10px + '+(undoButton.offsetWidth+endButton.offsetWidth)+'px)';function highlightElement(t){if(currentHighlightedElement&&(currentHighlightedElement.style.outline=''),!(t=document.elementFromPoint(t.clientX,t.clientY))||(currentHighlightedElement=t).style.outline='2px solid red')}document.addEventListener('mousemove',highlightElement),document.addEventListener('click',function(t){if(removalActive){t.preventDefault(),t.stopPropagation();var e={node:currentHighlightedElement,parent:currentHighlightedElement.parentNode,nextSibling:currentHighlightedElement.nextSibling};removedElements.push(e),currentHighlightedElement.remove(),currentHighlightedElement=null}}),document.addEventListener('keyup',function(t){'Escape'===t.key&&(removalActive=!1,undoButton.remove(),endButton.remove(),resetButton.remove(),document.removeEventListener('mousemove',highlightElement))})})()"
+        >Element Removal</a
+      >
+    </p>
+    <h2>Bookmarklet Code</h2>
+    <pre><code class="language-javascript">
+  /* Your bookmarklet code here */
+  </code></pre>
+
+    <h2>Tested Websites</h2>
+    <p>
+      The bookmarklet has been tested and verified to work on the following
+      websites:
+    </p>
+    <ul>
+      <li>
+        <a href="https://www.example.com" target="_blank"
+          >https://www.example.com</a
+        >
+      </li>
+      <li>
+        <a href="https://www.wikipedia.org" target="_blank"
+          >https://www.wikipedia.org</a
+        >
+      </li>
+      <li>
+        <a href="https://www.nytimes.com" target="_blank"
+          >https://www.nytimes.com</a
+        >
+      </li>
+      <li>
+        <a href="https://www.medium.com" target="_blank"
+          >https://www.medium.com</a
+        >
+      </li>
+      <li>
+        <a href="https://www.stackoverflow.com" target="_blank"
+          >https://www.stackoverflow.com</a
+        >
+      </li>
+    </ul>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/prism.min.js"></script>
+    <script>
+      document.querySelector(".language-javascript").textContent = document
+        .querySelector('a[href^="javascript:"]')
+        .getAttribute("href");
+    </script>
+  </body>
+</html>
