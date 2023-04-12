@@ -1,11 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Exercise 3</title>
-	<link rel="stylesheet" href="writeup.css">
-</head>
-<body>
-	<!-- your html here -->
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remove Elements Bookmarklet</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/themes/prism.css"
+      rel="stylesheet"
+    />
+    <!-- <link rel="stylesheet" href="./prism/prism.css" /> -->
+  </head>
+  <body>
+    <h1>Remove Elements Bookmarklet</h1>
+    <p>
+      Drag the link to your bookmarks toolbar:
+      <a
+        href="javascript:(function() {
+					document.body.style.paddingTop = '20px';
+
+					var removedElements = [];
+					var removalActive = true;
+					var currentHighlightedElement;
+				
+					function createButton(text, callback) {
+						var btn = document.createElement('button');
+						btn.innerHTML = text;
+						btn.style.position = 'fixed';
+						btn.style.top = '10px';
+						btn.style.zIndex = '999999';
+						btn.style.backgroundColor = 'Red';
+						btn.style.border = '1px solid black';
+						btn.style.padding = '5px';
+						btn.style.marginRight = '10px';
+						btn.onclick = callback;
+						document.body.appendChild(btn);
+						return btn;
+					}
+				
+					var undoButton = createButton('Undo', function() {
+						if (removedElements.length) {
+							var lastElement = removedElements.pop();
+							lastElement.parent.insertBefore(lastElement.node, lastElement.nextSibling);
+						}
+					});
+				
+					var endButton = createButton('End', function() {
+						removalActive = false;
+						undoButton.remove();
+						endButton.remove();
+						document.removeEventListener('mousemove', highlightElement);
+					});
+				
+					endButton.style.left = 'calc(10px + ' + undoButton.offsetWidth + 'px)';
+				
+					function highlightElement(event) {
+						if (currentHighlightedElement) {
+							currentHighlightedElement.style.outline = '';
+						}
+						var element = document.elementFromPoint(event.clientX, event.clientY);
+						if (element) {
+							currentHighlightedElement = element;
+							currentHighlightedElement.style.outline = '2px solid red';
+						}
+					}
+				
+					document.addEventListener('mousemove', highlightElement);
+				
+					document.addEventListener('click', function(event) {
+						if (!removalActive) return;
+						event.preventDefault();
+						event.stopPropagation();
+						if (currentHighlightedElement) {
+							var removedElement = {
+								node: currentHighlightedElement,
+								parent: currentHighlightedElement.parentNode,
+								nextSibling: currentHighlightedElement.nextSibling
+							};
+							removedElements.push(removedElement);
+							currentHighlightedElement.remove();
+							currentHighlightedElement = null;
+						}
+					});
+				
+					document.addEventListener('keyup', function(event) {
+						if (event.key === 'Escape') {
+							removalActive = false;
+							undoButton.remove();
+							endButton.remove();
+							document.removeEventListener('mousemove', highlightElement);
+						}
+					});
+				})();
+				"
+        >Remove Elements</a
+      >
+    </p>
+    <h2>Bookmarklet Code</h2>
+    <pre><code class="language-javascript">
+			<!-- display Bookmarklet Code  -->
+			javascript:(function() {
+				var removedElements = [];
+				var removalActive = true;
+				var currentHighlightedElement;
+			
+				function createButton(text, callback) {
+					var btn = document.createElement('button');
+					btn.innerHTML = text;
+					btn.style.position = 'fixed';
+					btn.style.top = '10px';
+					btn.style.zIndex = '999999';
+					btn.style.backgroundColor = 'white';
+					btn.style.border = '1px solid black';
+					btn.style.padding = '5px';
+					btn.style.marginRight = '10px';
+					btn.onclick = callback;
+					document.body.appendChild(btn);
+					return btn;
+				}
+			
+				var undoButton = createButton('Undo', function() {
+					if (removedElements.length) {
+						var lastElement = removedElements.pop();
+						lastElement.parent.insertBefore(lastElement.node, lastElement.nextSibling);
+					}
+				});
+			
+				var endButton = createButton('End', function() {
+					removalActive = false;
+					undoButton.remove();
+					endButton.remove();
+					document.removeEventListener('mousemove', highlightElement);
+				});
+			
+				endButton.style.left = 'calc(10px + ' + undoButton.offsetWidth + 'px)';
+			
+				function highlightElement(event) {
+					if (currentHighlightedElement) {
+						currentHighlightedElement.style.outline = '';
+					}
+					var element = document.elementFromPoint(event.clientX, event.clientY);
+					if (element) {
+						currentHighlightedElement = element;
+						currentHighlightedElement.style.outline = '2px solid red';
+					}
+				}
+			
+				document.addEventListener('mousemove', highlightElement);
+			
+				document.addEventListener('click', function(event) {
+					if (!removalActive) return;
+					event.preventDefault();
+					event.stopPropagation();
+					if (currentHighlightedElement) {
+						var removedElement = {
+							node: currentHighlightedElement,
+							parent: currentHighlightedElement.parentNode,
+							nextSibling: currentHighlightedElement.nextSibling
+						};
+						removedElements.push(removedElement);
+						currentHighlightedElement.remove();
+						currentHighlightedElement = null;
+					}
+				});
+			
+				document.addEventListener('keyup', function(event) {
+					if (event.key === 'Escape') {
+						removalActive = false;
+						undoButton.remove();
+						endButton.remove();
+						document.removeEventListener('mousemove', highlightElement);
+					}
+				});
+			})();
+			
+
+    </code></pre>
+    <h2>Tested Websites</h2>
+    <ul>
+      <li>
+        <a href="https://www.nytimes.com/" target="_blank"
+          >The New York Times</a
+        >
+      </li>
+      <li><a href="https://www.reddit.com/" target="_blank">Reddit</a></li>
+      <li>
+        <a href="https://www.w3schools.com/" target="_blank">W3Schools</a>
+      </li>
+      <li>
+        <a href="https://www.stackoverflow.com/" target="_blank"
+          >Stack Overflow</a
+        >
+      </li>
+      <li>
+        <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a>
+      </li>
+    </ul>
+    <!-- <script src="./prism/prism.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-javascript.min.js"></script>
+  </body>
 </html>
