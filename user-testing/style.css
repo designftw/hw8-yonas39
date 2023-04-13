@@ -1,0 +1,31 @@
+body {
+  background-color: beige;
+  padding: 2em;
+  margin: 1em;
+}
+article {
+  padding: 1em;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+div {
+  padding: 1em;
+  margin: 1em;
+}
+h1 {
+  text-align: center;
+}
+img {
+  width: 35%;
+}
+video {
+  width: 35%;
+}
+p,
+li {
+  font-size: 1.3em;
+}
+span {
+  font-size: 0.9em;
+  font-weight: bold;
+}

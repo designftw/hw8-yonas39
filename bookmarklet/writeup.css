@@ -1,5 +1,6 @@
 /* css for all your writeups here */
 body {
+  background-color: beige;
   padding: 2em;
   margin: 2em;
 }
@@ -8,4 +9,11 @@ p {
   text-align: center;
   padding: 1em;
   margin-bottom: 1em;
+}
+p {
+  font-size: 1.5em;
+}
+h1 {
+  background-color: black;
+  color: white;
 }

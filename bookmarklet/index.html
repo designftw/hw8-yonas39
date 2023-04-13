@@ -13,14 +13,15 @@
     <p>
       Drag and Drop the link to your bookmarks toolbar:
       <a
-        href="javascript:(function() {
+        href="javascript: (function () {
 					document.body.style.paddingTop = '20px';
-
 					var removedElements = [];
 					var removalActive = true;
 					var currentHighlightedElement;
 				
+			
 					function createButton(text, callback) {
+		
 						var btn = document.createElement('button');
 						btn.innerHTML = text;
 						btn.style.position = 'fixed';
@@ -36,22 +37,40 @@
 						return btn;
 					}
 				
-					var undoButton = createButton('Undo', function() {
+			
+					var undoButton = createButton('Undo', function () {
+
 						if (removedElements.length) {
 							var lastElement = removedElements.pop();
-							lastElement.parent.insertBefore(lastElement.node, lastElement.nextSibling);
+							lastElement.parent.insertBefore(
+								lastElement.node,
+								lastElement.nextSibling
+							);
 						}
 					});
 				
-					var endButton = createButton('End', function() {
+
+					var endButton = createButton('End', function () {
+			
 						removalActive = false;
 						undoButton.remove();
 						endButton.remove();
+						resetButton.remove();
 						document.removeEventListener('mousemove', highlightElement);
 					});
 
+					var resetButton = createButton('Reset', function () {
+						while (removedElements.length) {
+							var restoredElement = removedElements.pop();
+							restoredElement.parent.insertBefore(
+								restoredElement.node,
+								restoredElement.nextSibling
+							);
+						}
+					});
 				
 					endButton.style.left = 'calc(10px + ' + undoButton.offsetWidth + 'px)';
+					resetButton.style.left = 'calc(20px + ' + (undoButton.offsetWidth + endButton.offsetWidth) + 'px)';
 				
 					function highlightElement(event) {
 						if (currentHighlightedElement) {
@@ -66,26 +85,36 @@
 				
 					document.addEventListener('mousemove', highlightElement);
 				
-					document.addEventListener('click', function(event) {
+					document.addEventListener('click', function (event) {
 						if (!removalActive) return;
 						event.preventDefault();
 						event.stopPropagation();
+				
+					
 						if (currentHighlightedElement) {
+							if (currentHighlightedElement.innerHTML === 'Undo' ||  currentHighlightedElement.innerHTML === 'Reset') {
+								return true;
+							}
+							currentHighlightedElement.style.outline = ''; 
 							var removedElement = {
 								node: currentHighlightedElement,
 								parent: currentHighlightedElement.parentNode,
-								nextSibling: currentHighlightedElement.nextSibling
+								nextSibling: currentHighlightedElement.nextSibling,
 							};
+					
 							removedElements.push(removedElement);
 							currentHighlightedElement.remove();
 							currentHighlightedElement = null;
 						}
 					});
 				
-					document.addEventListener('keyup', function(event) {
+	
+					document.addEventListener('keyup', function (event) {
 						if (event.key === 'Escape') {
 							removalActive = false;
 							undoButton.remove();
+							endButton.remove();
+							resetButton.remove();
 							document.removeEventListener('mousemove', highlightElement);
 						}
 					});
@@ -97,85 +126,118 @@
     <h2>Bookmarklet Code</h2>
     <pre><code class="language-javascript">
 			<!-- display Bookmarklet Code  -->
-			javascript:(function() {
-				document.body.style.paddingTop = '20px';
-
+			javascript: (function () {
+				document.body.style.paddingTop = "20px";
 				var removedElements = [];
 				var removalActive = true;
 				var currentHighlightedElement;
 			
+				// Create button at the top corner of the page
 				function createButton(text, callback) {
-					var btn = document.createElement('button');
+					// alert('do you come here!')
+					var btn = document.createElement("button");
 					btn.innerHTML = text;
-					btn.style.position = 'fixed';
-					btn.style.top = '10px';
-					btn.style.zIndex = '999999';
-					btn.style.color = 'Blue';
-					btn.style.backgroundColor = 'Orange';
-					btn.style.border = '1px solid black';
-					btn.style.padding = '5px';
-					btn.style.marginRight = '10px';
+					btn.style.position = "fixed";
+					btn.style.top = "10px";
+					btn.style.zIndex = "999999";
+					btn.style.color = "Blue";
+					btn.style.backgroundColor = "Orange";
+					btn.style.border = "1px solid black";
+					btn.style.padding = "5px";
+					btn.style.marginRight = "10px";
 					btn.onclick = callback;
 					document.body.appendChild(btn);
 					return btn;
 				}
 			
-				var undoButton = createButton('Undo', function() {
+				// undo call back function
+				var undoButton = createButton("Undo", function () {
+					// alert('undo button clicked '');
 					if (removedElements.length) {
 						var lastElement = removedElements.pop();
-						lastElement.parent.insertBefore(lastElement.node, lastElement.nextSibling);
+						lastElement.parent.insertBefore(
+							lastElement.node,
+							lastElement.nextSibling
+						);
 					}
 				});
 			
-				var endButton = createButton('End', function() {
+				// End button remove all buttons and mouseover effect
+				var endButton = createButton("End", function () {
+					// alert('end Button clicked');
 					removalActive = false;
 					undoButton.remove();
 					endButton.remove();
-					document.removeEventListener('mousemove', highlightElement);
+					resetButton.remove();
+					document.removeEventListener("mousemove", highlightElement);
 				});
-
 			
-				endButton.style.left = 'calc(10px + ' + undoButton.offsetWidth + 'px)';
+				// Reset button to restore all removed elements
+				var resetButton = createButton("Reset", function () {
+					while (removedElements.length) {
+						var restoredElement = removedElements.pop();
+						restoredElement.parent.insertBefore(
+							restoredElement.node,
+							restoredElement.nextSibling
+						);
+					}
+				});
+			
+				endButton.style.left = "calc(10px + " + undoButton.offsetWidth + "px)";
+				resetButton.style.left =
+					"calc(10px + " + (undoButton.offsetWidth + endButton.offsetWidth) + "px)";
 			
 				function highlightElement(event) {
 					if (currentHighlightedElement) {
-						currentHighlightedElement.style.outline = '';
+						currentHighlightedElement.style.outline = "";
 					}
 					var element = document.elementFromPoint(event.clientX, event.clientY);
 					if (element) {
 						currentHighlightedElement = element;
-						currentHighlightedElement.style.outline = '2px solid red';
+						currentHighlightedElement.style.outline = "2px solid red";
 					}
 				}
 			
-				document.addEventListener('mousemove', highlightElement);
+				document.addEventListener("mousemove", highlightElement);
 			
-				document.addEventListener('click', function(event) {
+				document.addEventListener("click", function (event) {
 					if (!removalActive) return;
 					event.preventDefault();
 					event.stopPropagation();
+			
+					// Exception for undo button not to be highlighted and removed when clicked
 					if (currentHighlightedElement) {
+						if (
+							currentHighlightedElement.innerHTML === "Undo" ||
+							currentHighlightedElement.innerHTML === "Reset"
+						) {
+							return true;
+						}
+						currentHighlightedElement.style.outline = ""; // remove the highlights before added to the removedElement
 						var removedElement = {
 							node: currentHighlightedElement,
 							parent: currentHighlightedElement.parentNode,
-							nextSibling: currentHighlightedElement.nextSibling
+							nextSibling: currentHighlightedElement.nextSibling,
 						};
+						// node.style.outline.remove();
 						removedElements.push(removedElement);
 						currentHighlightedElement.remove();
 						currentHighlightedElement = null;
 					}
 				});
 			
-				document.addEventListener('keyup', function(event) {
-					if (event.key === 'Escape') {
+				// when Escape key is pressed it exists the bokmarklet mode
+				document.addEventListener("keyup", function (event) {
+					if (event.key === "Escape") {
 						removalActive = false;
 						undoButton.remove();
-						document.removeEventListener('mousemove', highlightElement);
+						endButton.remove();
+						resetButton.remove();
+						document.removeEventListener("mousemove", highlightElement);
 					}
 				});
 			})();
 			
-
     </code></pre>
     <h2>5-Tested Websites</h2>
     <ul>
@@ -184,7 +246,7 @@
           >The New York Times</a
         >
       </li>
-      <li><a href="https://www.reddit.com/" target="_blank">Reddit</a></li>
+      <li><a href="https://web.mit.edu/" target="_blank">MIT</a></li>
       <li>
         <a href="https://www.w3schools.com/" target="_blank">W3Schools</a>
       </li>
@@ -195,6 +257,9 @@
       </li>
       <li>
         <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a>
+      </li>
+      <li>
+        <a href="https://www.npr.org/" target="_blank">Npr Radio Station</a>
       </li>
     </ul>
     <script src="./prism/prism.js"></script>
